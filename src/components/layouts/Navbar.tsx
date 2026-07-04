@@ -31,7 +31,7 @@ const Navbar = () => {
       aria-label="Əsas naviqasiya"
       className={`z-50 w-full ${
         isHome
-          ? "absolute top-0 bg-black/20 border border-solid border-black/16"
+          ? "sticky top-0 bg-black/20 backdrop-blur-sm border-b border-black/16"
           : "sticky top-0 bg-background backdrop-blur-sm"
       }`}
     >
