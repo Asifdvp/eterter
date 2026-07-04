@@ -80,7 +80,7 @@ const About = () => {
               <p>
                 Çöhrə Estetik Klinika özünü yalnız xidmət göstərən bir müəssisə
                 kimi deyil, həm də pasiyentlərin özünəinamını artırmağı
-                hədəfləyən bir "gözəllik və sağlamlıq məkanı" kimi təqdim edir.
+                hədəfləyən bir “gözəllik və sağlamlıq məkanı” kimi təqdim edir.
                 Burada hər pasiyent üçün dəri növü, yaş, ümumi sağlamlıq və
                 estetik məqsədlər nəzərə alınaraq fərdi müalicə planı
                 hazırlanır.
