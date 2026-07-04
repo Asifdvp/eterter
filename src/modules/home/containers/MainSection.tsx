@@ -43,7 +43,6 @@ const MainSection = () => {
   const playerRef = useRef<YTPlayer | null>(null);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
-  const [videoReady, setVideoReady] = useState(false);
 
   const createPlayer = () => {
     if (!playerContainerRef.current) return;
@@ -67,9 +66,7 @@ const MainSection = () => {
       },
       events: {
         onStateChange: (event) => {
-          const playing = event.data === window.YT.PlayerState.PLAYING;
-          setIsPlaying(playing);
-          if (playing) setVideoReady(true);
+          setIsPlaying(event.data === window.YT.PlayerState.PLAYING);
         },
       },
     });
@@ -118,16 +115,6 @@ const MainSection = () => {
         aria-labelledby="hero-heading"
         className="relative min-h-[calc(100svh-4.5rem)] overflow-hidden"
       >
-        {/* Fallback poster — video yüklənsəyə qədər görünür */}
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 z-0 bg-cover bg-center transition-opacity duration-700"
-          style={{
-            backgroundImage: "url('/images/mainSection.webp')",
-            opacity: videoReady ? 0 : 1,
-          }}
-        />
-
         {/* YouTube video background */}
         <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
           <div
