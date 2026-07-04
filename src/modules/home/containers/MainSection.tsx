@@ -113,7 +113,7 @@ const MainSection = () => {
 
       <section
         aria-labelledby="hero-heading"
-        className="relative min-h-[calc(100svh-4.5rem)] overflow-hidden"
+        className="relative min-h-[55svh] md:min-h-[80svh] overflow-hidden"
       >
         {/* YouTube video background */}
         <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
@@ -128,7 +128,7 @@ const MainSection = () => {
         <div className="absolute inset-0 z-10 bg-black/20" />
 
         {/* Content */}
-        <Container className="relative z-20 min-h-[calc(100svh-4.5rem)] flex items-center justify-center">
+        <Container className="relative z-20 min-h-[55svh] md:min-h-[80svh] flex items-center justify-center">
           <div className="text-center flex flex-col items-center text-white">
             <h1
               id="hero-heading"
