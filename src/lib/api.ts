@@ -3,6 +3,12 @@ import { IDoctorData } from "@/types";
 const API_BASE = process.env.API_BASE_URL ?? "https://healthcohre-2.onrender.com/api/v1";
 const IMAGE_HOST = process.env.IMAGE_HOST ?? "https://healthcohre-2.onrender.com";
 
+function toAbsoluteUrl(path: string | null | undefined): string {
+  if (!path) return "";
+  if (/^https?:\/\//i.test(path)) return path;
+  return `${IMAGE_HOST}${path}`;
+}
+
 // ── Exported gallery types ────────────────────────────────────────────────────
 
 export type GalleryImage = { id: number; src: string };
@@ -29,7 +35,7 @@ function mapDoctor(d: DoctorApi): IDoctorData {
     id: d.id,
     name: d.fullName,
     specialty: d.specialty,
-    image: d.imageUrl ? `${IMAGE_HOST}${d.imageUrl}` : "",
+    image: toAbsoluteUrl(d.imageUrl),
     experience: d.experienceYears,
     patients: d.patientsCount,
     rating: d.rating,
@@ -79,6 +85,7 @@ export type NewsDetail = {
   id: number;
   title: string;
   date: string;
+  authorName?: string;
   description: string;
   images: { id: number; isMain: boolean; imageUrl: string }[];
 };
@@ -94,6 +101,7 @@ type NewsDetailApi = {
   id: number;
   title: string;
   publishedDate: string;
+  authorName?: string;
   description: string;
   images?: { id: number; isMain: boolean; imageUrl: string }[];
   mainImageUrl?: string;
@@ -110,7 +118,7 @@ export async function getNewsList(): Promise<NewsItem[]> {
       id: item.id,
       title: item.title,
       date: item.publishedDate,
-      mainImageUrl: item.mainImageUrl ? `${IMAGE_HOST}${item.mainImageUrl}` : "",
+      mainImageUrl: toAbsoluteUrl(item.mainImageUrl),
     }));
   } catch {
     return [];
@@ -126,14 +134,15 @@ export async function getNewsById(id: number): Promise<NewsDetail | null> {
     const data: NewsDetailApi = await res.json();
     const images = data.images?.map((img) => ({
       ...img,
-      imageUrl: img.imageUrl ? `${IMAGE_HOST}${img.imageUrl}` : "",
+      imageUrl: toAbsoluteUrl(img.imageUrl),
     })) ?? (data.mainImageUrl
-      ? [{ id: 1, isMain: true, imageUrl: `${IMAGE_HOST}${data.mainImageUrl}` }]
+      ? [{ id: 1, isMain: true, imageUrl: toAbsoluteUrl(data.mainImageUrl) }]
       : []);
     return {
       id: data.id,
       title: data.title,
       date: data.publishedDate,
+      authorName: data.authorName ?? undefined,
       description: data.description ?? "",
       images,
     };
@@ -158,7 +167,7 @@ export type ServiceDetail = {
   imageAlt: string;
   description: string;
   benefits: string[];
-  faq: { q: string; a: string }[];
+  faq: { question: string; answer: string }[];
 };
 
 export async function getServices(): Promise<Service[]> {
@@ -170,7 +179,7 @@ export async function getServices(): Promise<Service[]> {
     const data: (Omit<Service, "iconUrl"> & { iconUrl: string })[] = await res.json();
     return data.map((item) => ({
       ...item,
-      iconUrl: item.iconUrl ? `${IMAGE_HOST}${item.iconUrl}` : "",
+      iconUrl: toAbsoluteUrl(item.iconUrl),
     }));
   } catch {
     return [];
@@ -186,7 +195,7 @@ export async function getServiceById(id: number): Promise<ServiceDetail | null> 
     const data: Omit<ServiceDetail, "imageUrl"> & { imageUrl: string } = await res.json();
     return {
       ...data,
-      imageUrl: data.imageUrl ? `${IMAGE_HOST}${data.imageUrl}` : "",
+      imageUrl: toAbsoluteUrl(data.imageUrl),
     };
   } catch {
     return null;
@@ -229,7 +238,7 @@ export async function getGalleryImages(): Promise<GalleryImage[]> {
     const data: GalleryImageApi[] = await res.json();
     return data.map((item) => ({
       id: item.id,
-      src: `${IMAGE_HOST}${item.imageUrl}`,
+      src: toAbsoluteUrl(item.imageUrl),
     }));
   } catch {
     return [];
@@ -246,7 +255,7 @@ export async function getGalleryVideos(): Promise<GalleryVideo[]> {
     return data.map((item) => ({
       id: item.id,
       url: item.youtubeUrl,
-      title: item.title,
+      title: item.title ?? "",
     }));
   } catch {
     return [];

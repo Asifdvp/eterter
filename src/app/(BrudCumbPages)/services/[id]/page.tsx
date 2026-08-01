@@ -75,8 +75,8 @@ const ServiceDetail = async ({ params }: Props) => {
         "@type": "FAQPage",
         mainEntity: service.faq.map((item) => ({
           "@type": "Question",
-          name: item.q,
-          acceptedAnswer: { "@type": "Answer", text: item.a },
+          name: item.question,
+          acceptedAnswer: { "@type": "Answer", text: item.answer },
         })),
       }
     : null;
@@ -152,22 +152,14 @@ const ServiceDetail = async ({ params }: Props) => {
                 <div className="space-y-2">
                   {service.faq.map((item, i) => (
                     <div key={i}>
-                      <p className="font-medium text-black/80">{item.q}</p>
-                      <p className="text-black/60">{item.a}</p>
+                      <p className="font-medium text-black/80">{item.question}</p>
+                      <p className="text-black/60">{item.answer}</p>
                     </div>
                   ))}
                 </div>
               </div>
             )}
 
-            <div className="mt-4">
-              <p className="font-medium text-black/70">
-                Pulsuz konsultasiya üçün zəng edin:{" "}
-                <a href="tel:+994707086161" className="text-primary hover:underline">
-                  070 708 61 61
-                </a>
-              </p>
-            </div>
           </div>
 
         </div>

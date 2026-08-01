@@ -24,8 +24,14 @@ const DetailContent = async ({ id }: Props) => {
         )}
 
         <div className={`rounded-lg px-4 border border-primary/12 p-3 md:px-5 ${article.images.length > 0 ? "w-full md:w-2/3" : "w-full"}`}>
-          <div className="font-medium text-black/60 leading-4 text-xs mb-1">
-            {article.date}
+          <div className="font-medium text-black/60 leading-4 text-xs mb-1 flex items-center gap-2">
+            <span>{article.date}</span>
+            {article.authorName && (
+              <>
+                <span className="text-black/30">·</span>
+                <span>{article.authorName}</span>
+              </>
+            )}
           </div>
           <h1 className="text-base leading-5 md:text-[18px] md:leading-6 font-semibold text-black/80 mb-1">
             {article.title}
