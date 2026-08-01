@@ -1,4 +1,5 @@
 import GaleryTabs from "@/modules/galery/GaleryTabs";
+import { getGalleryImages, getGalleryVideos } from "@/lib/api";
 import type { Metadata } from "next";
 import Script from "next/script";
 
@@ -36,7 +37,12 @@ const breadcrumbSchema = {
   ],
 };
 
-const Galery = () => {
+const Galery = async () => {
+  const [images, videos] = await Promise.all([
+    getGalleryImages(),
+    getGalleryVideos(),
+  ]);
+
   return (
     <>
       <Script
@@ -44,7 +50,7 @@ const Galery = () => {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
-      <GaleryTabs />
+      <GaleryTabs images={images} videos={videos} />
     </>
   );
 };

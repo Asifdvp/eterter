@@ -2,7 +2,7 @@ import Container from "@/components/shared/Container";
 import DoctorDetailContent from "@/modules/doctorDetail/containers/DoctorDetailContent";
 import type { Metadata } from "next";
 import Script from "next/script";
-import doctors from "@/data/doctors.json";
+import { getDoctorById } from "@/lib/api";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -10,7 +10,7 @@ type Props = {
 
 export const generateMetadata = async ({ params }: Props): Promise<Metadata> => {
   const { id } = await params;
-  const doctor = doctors.find((d) => d.id === Number(id));
+  const doctor = await getDoctorById(Number(id));
 
   if (!doctor) {
     return {
@@ -43,7 +43,7 @@ export const generateMetadata = async ({ params }: Props): Promise<Metadata> => 
 
 const NewsDetail = async ({ params }: Props) => {
   const { id } = await params;
-  const doctor = doctors.find((d) => d.id === Number(id));
+  const doctor = await getDoctorById(Number(id));
 
   const physicianSchema = doctor
     ? {
@@ -53,7 +53,7 @@ const NewsDetail = async ({ params }: Props) => {
         name: doctor.name,
         jobTitle: doctor.specialty,
         description: doctor.shortDescription,
-        image: `https://cohre.az${doctor.image}`,
+        image: doctor.image,
         worksFor: {
           "@type": "MedicalClinic",
           name: "Çöhrə Estetik Klinikası",

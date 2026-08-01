@@ -2,6 +2,15 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   output: "standalone",
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "healthcohre-2.onrender.com",
+        pathname: "/uploads/**",
+      },
+    ],
+  },
   turbopack: {
     rules: {
       "*.svg": {
