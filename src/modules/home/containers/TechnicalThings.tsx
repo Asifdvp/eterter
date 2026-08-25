@@ -1,6 +1,6 @@
 import Container from "@/components/shared/Container";
 import LinkButton from "@/components/shared/LinkButton";
-import { medias } from "@/modules/galery/constants";
+import { getGalleryImages } from "@/lib/api";
 import {
   Carousel,
   CarouselContent,
@@ -8,7 +8,10 @@ import {
 } from "@/components/ui/carousel";
 import Image from "next/image";
 
-const TechnicalThings = () => {
+const TechnicalThings = async () => {
+  const images = await getGalleryImages();
+  const preview = images.slice(0, 8);
+
   return (
     <section aria-label="Qalereya" className="bg-white py-6 md:py-12">
       <Container>
@@ -31,14 +34,14 @@ const TechnicalThings = () => {
           className="w-full"
         >
           <CarouselContent>
-            {medias.map((media, index) => (
+            {preview.map((image, index) => (
               <CarouselItem
-                key={media.src}
+                key={image.id}
                 className="basis-[85%] sm:basis-1/2 lg:basis-1/3"
               >
                 <div className="relative aspect-square rounded-md overflow-hidden border border-primary/12">
                   <Image
-                    src={media.src}
+                    src={image.src}
                     alt={`Çöhrə Estetik Klinikası qalereya şəkli ${index + 1}`}
                     fill
                     className="object-cover object-center"

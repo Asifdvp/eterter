@@ -5,7 +5,11 @@ import CloseIcon from "@/assets/icons/close.svg";
 import PlayIcon from "@/assets/icons/playButton.svg";
 import Image from "next/image";
 import { useScrollLock } from "@/hooks/useScrollLock";
-import { videos } from "./constants";
+import type { GalleryVideo } from "@/lib/api";
+
+type Props = {
+  videos: GalleryVideo[];
+};
 
 function getYoutubeId(url: string): string {
   try {
@@ -22,40 +26,27 @@ function toEmbedUrl(url: string): string {
   return `https://www.youtube.com/embed/${id}`;
 }
 
-const videoTitles: Record<number, string> = {
-  1: "Çöhrə Estetik Klinikası — prosedur videosu 1",
-  2: "Çöhrə Estetik Klinikası — prosedur videosu 2",
-  3: "Çöhrə Estetik Klinikası — prosedur videosu 3",
-  4: "Çöhrə Estetik Klinikası — prosedur videosu 4",
-  5: "Çöhrə Estetik Klinikası — prosedur videosu 5",
-  6: "Çöhrə Estetik Klinikası — prosedur videosu 6",
-};
-
-const VideoList = () => {
-  const [selectedVideo, setSelectedVideo] = useState<{ url: string; id: number } | null>(null);
+const VideoList = ({ videos }: Props) => {
+  const [selectedVideo, setSelectedVideo] = useState<GalleryVideo | null>(null);
 
   useScrollLock(!!selectedVideo);
 
   return (
     <Container>
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-        {videos.items.map((video) => {
+        {videos.map((video) => {
           const videoId = getYoutubeId(video.url);
-          const title = videoTitles[video.id] ?? `Video ${video.id}`;
           return (
-            <div
-              key={video.id}
-              className="cursor-pointer overflow-hidden rounded-lg relative h-60"
-            >
+            <div key={video.id} className="cursor-pointer overflow-hidden rounded-lg relative h-60">
               <button
                 type="button"
                 className="w-full h-full relative block"
-                onClick={() => setSelectedVideo({ url: video.url, id: video.id })}
-                aria-label={`${title} — izlə`}
+                onClick={() => setSelectedVideo(video)}
+                aria-label={`${video.title} — izlə`}
               >
                 <Image
                   src={`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`}
-                  alt={title}
+                  alt={video.title}
                   fill
                   className="object-cover hover:scale-105 transition-transform duration-200"
                   unoptimized
@@ -73,12 +64,11 @@ const VideoList = () => {
         })}
       </div>
 
-      {/* Video modal */}
       {selectedVideo && (
         <div
           role="dialog"
           aria-modal="true"
-          aria-label={videoTitles[selectedVideo.id] ?? "Video"}
+          aria-label={selectedVideo.title}
           className="fixed inset-0 bg-black/70 flex items-center justify-center z-50"
           onClick={() => setSelectedVideo(null)}
         >
@@ -89,7 +79,7 @@ const VideoList = () => {
             <iframe
               className="w-full h-full rounded-md shadow-lg"
               src={`${toEmbedUrl(selectedVideo.url)}?autoplay=1`}
-              title={videoTitles[selectedVideo.id] ?? "YouTube video"}
+              title={selectedVideo.title}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
             />

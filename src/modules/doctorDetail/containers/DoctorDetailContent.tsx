@@ -1,7 +1,6 @@
 import ShowHTMLContent from "@/components/shared/ShowHTMLContent";
 import DoctorIamge from "../components/DoctorImage";
-import doctors from "@/data/doctors.json";
-import { IDoctorData } from "@/types";
+import { getDoctorById } from "@/lib/api";
 import { notFound } from "next/navigation";
 
 type Props = {
@@ -11,13 +10,13 @@ type Props = {
 const DoctorDetailContent = async ({ id }: Props) => {
   const doctorId = parseInt(id, 10);
   if (isNaN(doctorId)) notFound();
-  const doctor = doctors.find((d) => d.id === doctorId);
+  const doctor = await getDoctorById(doctorId);
   if (!doctor) notFound();
   return (
     <div className="pb-8 md:pb-12 ">
       <div className=" flex flex-col-reverse md:flex-row gap-4 md:gap-6">
         <div className="w-full md:w-1/3 ">
-          <DoctorIamge doctor={doctor as unknown as IDoctorData} />
+          <DoctorIamge doctor={doctor} />
         </div>
 
         <div className="rounded-lg  px-4  border border-primary/12 w-full md:w-2/3 p-3  md:px-5 ">

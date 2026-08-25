@@ -3,9 +3,13 @@ import Container from "@/components/shared/Container";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import PhotoGalery from "@/modules/galery/components/PhotoGalery";
-import { medias } from "./constants";
+import type { GalleryImage } from "@/lib/api";
 
-const ImageList = () => {
+type Props = {
+  images: GalleryImage[];
+};
+
+const ImageList = ({ images }: Props) => {
   const [open, setOpen] = useState(false);
   const [index, setIndex] = useState(0);
 
@@ -16,16 +20,16 @@ const ImageList = () => {
       document.body.style.overflow = "";
     }
     return () => {
-      document.body.style.overflow = ""; // cleanup
+      document.body.style.overflow = "";
     };
   }, [open]);
 
   return (
     <Container>
-      <div className=" grid grid-rows-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-        {medias.map((card, i) => (
+      <div className="grid grid-rows-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+        {images.map((image, i) => (
           <div
-            key={card.src}
+            key={image.id}
             className="cursor-pointer overflow-hidden rounded-lg max-h-100"
             onClick={() => {
               setIndex(i);
@@ -33,21 +37,20 @@ const ImageList = () => {
             }}
           >
             <Image
-              src={card.src}
+              src={image.src}
               alt="Qalereya şəkli"
               width={400}
               height={300}
-              className="object-cover object-center w-full  hover:scale-105 transition-transform duration-200"
+              className="object-cover object-center w-full hover:scale-105 transition-transform duration-200"
             />
           </div>
         ))}
       </div>
-      {/* Modal */}
       <PhotoGalery
         open={open}
         setOpen={setOpen}
         index={index}
-        slides={medias}
+        slides={images}
       />
     </Container>
   );
